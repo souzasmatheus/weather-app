@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import Axios from 'axios';
+import apiToken from './config';
 import './App.css';
 
 class App extends Component {
   state = {
     city: '',
     state: '',
-    isLoading: false
+    isLoading: false,
+    error: false
   };
 
   renderStates() {
@@ -45,12 +48,6 @@ class App extends Component {
       </option>
     ));
 
-    statesEl.push(
-      <option disabled selected>
-        UF
-      </option>
-    );
-
     return statesEl;
   }
 
@@ -67,7 +64,11 @@ class App extends Component {
             type="text"
             placeholder="Informe a cidade"
           />
-          <select onChange={e => this.setState({ state: e.target.value })}>
+          <select
+            defaultValue="UF"
+            onChange={e => this.setState({ state: e.target.value })}
+          >
+            <option disabled>UF</option>
             {this.renderStates()}
           </select>
           <input type="submit" value="Buscar" onClick={() => this.search()} />
