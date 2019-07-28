@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import apiToken from './config';
 import './App.css';
+import Card from './components/Card/Card';
 
 class App extends Component {
   state = {
@@ -72,6 +73,11 @@ class App extends Component {
             {this.renderStates()}
           </select>
           <input type="submit" value="Buscar" onClick={() => this.search()} />
+        </div>
+        <div className="content">
+          <Card />
+          <Card />
+          <Card />
         </div>
       </div>
     );
