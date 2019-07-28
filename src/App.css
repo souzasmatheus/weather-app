@@ -4,3 +4,45 @@
   justify-content: center;
   align-items: center;
 }
+
+.header {
+  background-color: aqua;
+  width: 800px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+input[type='text'] {
+  border: solid 1px #3cba9d;
+  padding-left: 20px;
+  border-radius: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+select {
+  background: #3cba9d;
+  cursor: pointer;
+  width: 130px;
+  height: 35px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  padding: 0 20px 0 12px;
+  color: #fff;
+  text-indent: 0.01px;
+  text-overflow: '';
+  border-style: none;
+  border-radius: 10px;
+}
+
+input[type='submit'] {
+  background-color: #3cba9d;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  width: 130px;
+  height: 35px;
+  border-style: none;
+  border-radius: 10px;
+}
