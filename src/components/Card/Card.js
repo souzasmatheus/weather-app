@@ -1,7 +1,22 @@
 import React from 'react';
 import './Card.css';
 
-function Card({ dataObj, isToday, index }) {
+function Card({ dataObj, index }) {
+  // Get weekday name
+  const week = [
+    'Domingo',
+    'Segunda-Feira',
+    'Terça-Feira',
+    'Quarta-Feira',
+    'Quinta-Feira',
+    'Sexta-Feira',
+    'Sábado'
+  ];
+  const splitDate = dataObj.date.split('-');
+  const formattedDate = new Date(splitDate[0], splitDate[1] - 1, splitDate[2]);
+  const dayName = week[formattedDate.getDay()];
+
+  const isToday = index === 0;
   if (isToday) {
     return (
       <div className="card-container">
@@ -19,7 +34,7 @@ function Card({ dataObj, isToday, index }) {
     return (
       <div className="card-container">
         <div className="card-header">
-          <p>{index === 0 ? 'Amanhã' : 'Depois de amanhã'}</p>
+          <p>{index === 1 ? 'Amanhã' : dayName}</p>
         </div>
         <div className="card-content">
           <p>
@@ -31,24 +46,5 @@ function Card({ dataObj, isToday, index }) {
     );
   }
 }
-
-Card.defaultProps = {
-  dataObj: {
-    date_br: '28/07/2019',
-    text_icon: {
-      icon: {
-        day: '1'
-      },
-      text: {
-        pt: 'Sol com poucas nuvens'
-      }
-    },
-    temperature: {
-      min: 18,
-      max: 32
-    }
-  },
-  index: 0
-};
 
 export default Card;
