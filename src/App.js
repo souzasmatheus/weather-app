@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import apiToken from './config';
-import querystring from 'querystring';
 import './App.css';
 import Card from './components/Card/Card';
 
@@ -143,12 +142,14 @@ class App extends Component {
               style={{ width: '200px' }}
             />
           )}
+
           {!this.state.isLoading && this.state.error && (
             <h1 className="message">
               Ocorreu um erro. Por favor, verifique se o nome da cidade está
               escrito corretamente.
             </h1>
           )}
+
           {!this.state.isLoading &&
             this.state.data.length !== 0 &&
             this.state.data.map((day, index) => (
