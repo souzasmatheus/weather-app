@@ -24,7 +24,10 @@ function Card({ dataObj, index }) {
           <p>Agora</p>
         </div>
         <div className="card-content">
-          <img src={require(`../../assets/${dataObj.icon}.png`)} alt="" />
+          <img
+            src={require(`../../assets/${dataObj.icon}.png`)}
+            alt="weather condition icon"
+          />
           <p>{dataObj.temperature}° C</p>
           <p>{dataObj.condition}</p>
         </div>
