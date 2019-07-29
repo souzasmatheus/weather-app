@@ -10,7 +10,8 @@ class App extends Component {
     city: '',
     state: '',
     isLoading: false,
-    error: false
+    error: false,
+    data: []
   };
 
   renderStates() {
@@ -70,13 +71,29 @@ class App extends Component {
           }
         )
           .then(res => {
+            let data = [];
             Axios.get(
               'https://cors-anywhere.herokuapp.com/' +
-                `http://apiadvisor.climatempo.com.br/api/v1/forecast/locale/${
+                `http://apiadvisor.climatempo.com.br/api/v1/weather/locale/${
                   res.data.locales[0]
-                }/days/15?token=${apiToken}`
+                }/current?token=${apiToken}`
             )
-              .then(res => console.log(res))
+              .then(res => {
+                data.push(res.data.data);
+                Axios.get(
+                  'https://cors-anywhere.herokuapp.com/' +
+                    `http://apiadvisor.climatempo.com.br/api/v1/forecast/locale/${
+                      res.data.id
+                    }/days/15?token=${apiToken}`
+                )
+                  .then(res => {
+                    data.push(res.data.data[1]);
+                    data.push(res.data.data[2]);
+                    this.setState({ data, isLoading: false });
+                    console.log(this.state.data);
+                  })
+                  .catch(err => console.log(err));
+              })
               .catch(err => console.log(err));
           })
           .catch(err => console.log(err));
@@ -103,9 +120,19 @@ class App extends Component {
           <input type="submit" value="Buscar" onClick={() => this.search()} />
         </div>
         <div className="content">
-          <Card />
-          <Card />
-          <Card />
+          {!this.state.isLoading && this.state.data.length === 0 && (
+            <h1>Aguardando input</h1>
+          )}
+          {this.state.isLoading && (
+            <h1>
+              Um instante, estamos coletando os dados meteorológicos da cidade
+            </h1>
+          )}
+          {!this.state.isLoading &&
+            this.state.data.length !== 0 &&
+            this.state.data.map((day, index) => (
+              <Card key={`card-${index}`} dataObj={day} index={index} />
+            ))}
         </div>
       </div>
     );
