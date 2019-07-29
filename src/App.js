@@ -92,13 +92,21 @@ class App extends Component {
                     this.setState({ data, isLoading: false });
                     console.log(this.state.data);
                   })
-                  .catch(err => console.log(err));
+                  .catch(err => {
+                    this.setState({ isLoading: false, error: true });
+                  });
               })
-              .catch(err => console.log(err));
+              .catch(err => {
+                this.setState({ isLoading: false, error: true });
+              });
           })
-          .catch(err => console.log(err));
+          .catch(err => {
+            this.setState({ isLoading: false, error: true });
+          });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        this.setState({ isLoading: false, error: true });
+      });
   }
 
   render() {
@@ -106,7 +114,7 @@ class App extends Component {
       <div className="App">
         <div className="header">
           <input
-            onChange={e => this.setState({ city: e.target.value })}
+            onChange={e => this.setState({ city: e.target.value.trimRight() })}
             type="text"
             placeholder="Informe a cidade"
           />
@@ -120,12 +128,22 @@ class App extends Component {
           <input type="submit" value="Buscar" onClick={() => this.search()} />
         </div>
         <div className="content">
-          {!this.state.isLoading && this.state.data.length === 0 && (
-            <h1>Aguardando input</h1>
-          )}
+          {!this.state.isLoading &&
+            !this.state.error &&
+            this.state.data.length === 0 && (
+              <h1 className="message">Aguardando input</h1>
+            )}
           {this.state.isLoading && (
-            <h1>
-              Um instante, estamos coletando os dados meteorológicos da cidade
+            <img
+              src="https://media1.tenor.com/images/556e9ff845b7dd0c62dcdbbb00babb4b/tenor.gif?itemid=5300368"
+              alt=""
+              style={{ width: '200px' }}
+            />
+          )}
+          {!this.state.isLoading && this.state.error && (
+            <h1 className="message">
+              Ocorreu um erro. Por favor, verifique se o nome da cidade está
+              escrito corretamente.
             </h1>
           )}
           {!this.state.isLoading &&
