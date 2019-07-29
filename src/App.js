@@ -54,51 +54,54 @@ class App extends Component {
     return statesEl;
   }
 
-  search() {
+  async search() {
     this.setState({ isLoading: true });
-    Axios.get(
-      'https://cors-anywhere.herokuapp.com/' +
+
+    // Workaround to make sure api response does not get blocked by the browser
+    const proxyURL = 'https://cors-anywhere.herokuapp.com/';
+
+    // Get city's id
+    const cityId = await Axios.get(
+      proxyURL +
         `http://apiadvisor.climatempo.com.br/api/v1/locale/city?name=${
           this.state.city
         }&state=${this.state.state}&token=${apiToken}`
     )
+      .then(res => res.data[0].id)
+      .catch(err => {
+        this.setState({ isLoading: false, error: true });
+      });
+
+    // Register city's id in api token
+    await Axios.put(
+      proxyURL +
+        `http://apiadvisor.climatempo.com.br/api-manager/user-token/${apiToken}/locales`,
+      {
+        localeId: [cityId]
+      }
+    )
+      .then(res => res)
+      .catch(err => {
+        this.setState({ isLoading: false, error: true });
+      });
+
+    // Fetch weather data and set new state to component
+    Axios.get(
+      proxyURL +
+        `http://apiadvisor.climatempo.com.br/api/v1/weather/locale/${cityId}/current?token=${apiToken}`
+    )
       .then(res => {
-        Axios.put(
-          'https://cors-anywhere.herokuapp.com/' +
-            `http://apiadvisor.climatempo.com.br/api-manager/user-token/${apiToken}/locales`,
-          {
-            localeId: [res.data[0].id]
-          }
+        let data = [];
+        data.push(res.data.data);
+        Axios.get(
+          proxyURL +
+            `http://apiadvisor.climatempo.com.br/api/v1/forecast/locale/${cityId}/days/15?token=${apiToken}`
         )
           .then(res => {
-            let data = [];
-            Axios.get(
-              'https://cors-anywhere.herokuapp.com/' +
-                `http://apiadvisor.climatempo.com.br/api/v1/weather/locale/${
-                  res.data.locales[0]
-                }/current?token=${apiToken}`
-            )
-              .then(res => {
-                data.push(res.data.data);
-                Axios.get(
-                  'https://cors-anywhere.herokuapp.com/' +
-                    `http://apiadvisor.climatempo.com.br/api/v1/forecast/locale/${
-                      res.data.id
-                    }/days/15?token=${apiToken}`
-                )
-                  .then(res => {
-                    data.push(res.data.data[1]);
-                    data.push(res.data.data[2]);
-                    this.setState({ data, isLoading: false });
-                    console.log(this.state.data);
-                  })
-                  .catch(err => {
-                    this.setState({ isLoading: false, error: true });
-                  });
-              })
-              .catch(err => {
-                this.setState({ isLoading: false, error: true });
-              });
+            data.push(res.data.data[1]);
+            data.push(res.data.data[2]);
+            this.setState({ data, isLoading: false });
+            console.log(this.state.data);
           })
           .catch(err => {
             this.setState({ isLoading: false, error: true });
