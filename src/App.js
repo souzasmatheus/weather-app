@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import apiToken from './config';
+import querystring from 'querystring';
 import './App.css';
 import Card from './components/Card/Card';
 
@@ -54,6 +55,33 @@ class App extends Component {
 
   search() {
     this.setState({ isLoading: true });
+    Axios.get(
+      'https://cors-anywhere.herokuapp.com/' +
+        `http://apiadvisor.climatempo.com.br/api/v1/locale/city?name=${
+          this.state.city
+        }&state=${this.state.state}&token=${apiToken}`
+    )
+      .then(res => {
+        Axios.put(
+          'https://cors-anywhere.herokuapp.com/' +
+            `http://apiadvisor.climatempo.com.br/api-manager/user-token/${apiToken}/locales`,
+          {
+            localeId: [res.data[0].id]
+          }
+        )
+          .then(res => {
+            Axios.get(
+              'https://cors-anywhere.herokuapp.com/' +
+                `http://apiadvisor.climatempo.com.br/api/v1/forecast/locale/${
+                  res.data.locales[0]
+                }/days/15?token=${apiToken}`
+            )
+              .then(res => console.log(res))
+              .catch(err => console.log(err));
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
