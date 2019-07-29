@@ -67,6 +67,10 @@ input[type='submit'] {
   color: #797775;
 }
 
+.loading-img {
+  width: 200px;
+}
+
 @media only screen and (max-width: 500px) {
   .App {
     flex: 1 0 100%;
@@ -84,5 +88,9 @@ input[type='submit'] {
 
   .header {
     flex-direction: column;
+  }
+
+  .loading-img {
+    width: 100%;
   }
 }

@@ -139,7 +139,7 @@ class App extends Component {
             <img
               src="https://media1.tenor.com/images/556e9ff845b7dd0c62dcdbbb00babb4b/tenor.gif?itemid=5300368"
               alt=""
-              style={{ width: '200px' }}
+              className="loading-img"
             />
           )}
 
